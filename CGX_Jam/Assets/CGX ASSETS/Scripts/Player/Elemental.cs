@@ -24,6 +24,11 @@ public class Elemental : MonoBehaviour
 
     MeshRenderer renderer;
 
+    public int maxHealth;
+    int health;
+
+    public GameObject healthBar;
+
     public static Color[] colours =
     { // colour   R               G         B  values
         new Color(1f,           64f/255f,   0f),
@@ -36,27 +41,29 @@ public class Elemental : MonoBehaviour
     void Start()
     {
         renderer = GetComponent<MeshRenderer>();
+        health = maxHealth;
     }
 
     // Update is called once per frame
     void LateUpdate()
     {
-        if (XInput.GetConnected())
+        if (!PauseMenu.paused)
         {
-            if (XInput.GetKeyPressed(0, (int)leftCycle))
-                elementSelect--;
-            if (XInput.GetKeyPressed(0, (int)rightCycle))
-                elementSelect++;
-        }
-        else
-        {
-            if(Input.mouseScrollDelta.y > 0)
+            if (!XInput.GetConnected())
             {
-                elementSelect += 1u;
-            }
-            else if(Input.mouseScrollDelta.y < 0)
-            {
-                elementSelect -= 1u;
+                if (Input.mouseScrollDelta.y > 0)
+                {
+                    elementSelect += 1u;
+                }
+                else if (Input.mouseScrollDelta.y < 0)
+                {
+                    elementSelect -= 1u;
+                }
+
+                if (Input.GetKeyDown(KeyCode.L))
+                {
+                    resetPlayer();
+                }
             }
         }
 
@@ -65,5 +72,27 @@ public class Elemental : MonoBehaviour
         curElement = (Elements) temp;
 
         renderer.material.color = colours[temp];
+
+        healthBar.transform.localScale = new Vector3(Mathf.Lerp(0f, 2f, (float)health / maxHealth), 0.17011f, 0f);
+    }
+
+    public void resetPlayer()
+    {
+        health = maxHealth;
+    }
+
+    public void Damage()
+    {
+        health -= 1;
+    }
+
+    public void ElementInc()
+    {
+        elementSelect += 1u;
+    }
+
+    public void ElementDec()
+    {
+        elementSelect -= 1u;
     }
 }

@@ -20,12 +20,15 @@ public class Combat : MonoBehaviour
     {
         element = type.curElement;
 
-        if (!XInput.GetConnected(0))
+        if (!PauseMenu.paused)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (!XInput.GetConnected(0))
             {
-                Debug.Log("Shooting");
-                Fire();
+                if (Input.GetKeyDown(KeyCode.Mouse0))
+                {
+                    //Debug.Log("Shooting");
+                    Fire();
+                }
             }
         }
     }
@@ -50,7 +53,7 @@ public class Combat : MonoBehaviour
 
             bul.transform.position = transform.position;
             bul.transform.forward = newF;
-            bul.GetComponent<Bullets>().type = type.curElement;
+            bul.GetComponent<Bullets>().type = element;
 
             bul.SetActive(true);
         }

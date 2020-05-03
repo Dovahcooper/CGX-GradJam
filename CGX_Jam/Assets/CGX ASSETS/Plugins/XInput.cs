@@ -87,6 +87,11 @@ namespace XBOX
         public static extern void cleanDLL();
         #endregion
 
+        public void QuitGame()
+        {
+            Application.Quit();
+        }
+
         public Buttons[] allButtons =
         {
             Buttons.A,
@@ -117,11 +122,31 @@ namespace XBOX
             Buttons.LS_Down_Left,
         };
 
+        #region Events
         [SerializeField]
         public UnityEvent aPress;
 
         [SerializeField]
+        public UnityEvent bPress;
+
+        [SerializeField]
         public UnityEvent xPress;
+
+        [SerializeField]
+        public UnityEvent yPress;
+
+        [SerializeField]
+        public UnityEvent RTPress;
+
+        [SerializeField]
+        public UnityEvent LTPress;
+
+        [SerializeField]
+        public UnityEvent StartPress;
+
+        [SerializeField]
+        public UnityEvent R3Press;
+        #endregion
 
         // Start is called before the first frame update
         void Start()
@@ -145,13 +170,37 @@ namespace XBOX
             //}
             if (GetConnected(0))
             {
-                if(GetKeyPressed(0, (int)Buttons.A))
+                if (GetKeyPressed(0, (int)Buttons.A))
                 {
                     aPress.Invoke();
                 }
-                if(GetKeyPressed(0, (int)Buttons.X))
+                if (GetKeyPressed(0, (int)Buttons.B))
+                {
+                    bPress.Invoke();
+                }
+                if (GetKeyPressed(0, (int)Buttons.X))
                 {
                     xPress.Invoke();
+                }
+                if (GetKeyPressed(0, (int)Buttons.Y))
+                {
+                    yPress.Invoke();
+                }
+                if (GetKeyPressed(0, (int)Buttons.LTrig))
+                {
+                    LTPress.Invoke();
+                }
+                if (GetKeyPressed(0, (int)Buttons.RTrig))
+                {
+                    RTPress.Invoke();
+                }
+                if (GetKeyPressed(0, (int)Buttons.Start))
+                {
+                    StartPress.Invoke();
+                }
+                if (GetKeyPressed(0, (int)Buttons.R3))
+                {
+                    R3Press.Invoke();
                 }
             }
         }

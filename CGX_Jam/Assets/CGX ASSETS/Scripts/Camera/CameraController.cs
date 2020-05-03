@@ -26,13 +26,21 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (!cameraLockMode)
+        if (!PauseMenu.paused)
         {
-            InputChecks();
-        }
-        else
-        {
-            CameraLockMove();
+            if (!cameraLockMode)
+            {
+                InputChecks();
+            }
+            else
+            {
+                CameraLockMove();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Mouse2))
+            {
+                SwitchCamMode();
+            }
         }
     }
 
@@ -52,10 +60,6 @@ public class CameraController : MonoBehaviour
 
             CameraMove(camControl);
 
-            //if(XInput.GetKeyPressed(0, (int)Buttons.R3))
-            //{
-            //    cameraLockMode = !cameraLockMode;
-            //}
         }
         else
         {
@@ -63,12 +67,12 @@ public class CameraController : MonoBehaviour
             camControl.y += -Input.GetAxis("Mouse Y");
 
             CameraMove(camControl);
-
-            //if (Input.GetKeyDown(KeyCode.Mouse2))
-            //{
-            //    cameraLockMode = !cameraLockMode;
-            //}
         }
+    }
+
+    public void SwitchCamMode()
+    {
+        cameraLockMode = !cameraLockMode;
     }
 
     void CameraMove(Vector2 camLook)

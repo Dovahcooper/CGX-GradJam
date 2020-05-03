@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
+using XBOX;
+
 public class Boss : MonoBehaviour
 {
     [SerializeField]
@@ -19,6 +21,14 @@ public class Boss : MonoBehaviour
     public float dissolveTime = 0f;
 
     float dissolveSpeed = 0.2f;
+
+    bool flameSpawn = false;
+    bool waterSpawn = false;
+    bool lightningSpawn = false;
+    bool windSpawn = false;
+
+    public GameObject WaterHazardObj;
+    public GameObject WindHazardObj;
 
     public Text id;
     public RawImage healthBar;
@@ -50,22 +60,48 @@ public class Boss : MonoBehaviour
         healthBar.color = newCol;
 
         startScaleBar = healthBar.rectTransform.localScale.x;
+
+        switch (bossType)
+        {
+            case Elements.Fire:
+                spawnBehaviour.AddListener(FlameSpawn);
+                break;
+            case Elements.Water:
+                spawnBehaviour.AddListener(WaterRise);
+                break;
+            case Elements.Lightning:
+                spawnBehaviour.AddListener(LightningStrikes);
+                break;
+            case Elements.Wind:
+                spawnBehaviour.AddListener(TornadoSpawn);
+                break;
+            default:
+                break;
+        }
+
+        spawnBehaviour.Invoke();
     }
 
     private void re_enable()
     {
         killCount++;
-        if (killCount >= 4)
+        if (killCount >= 2)
         {
-        
+            spawnBehaviour.Invoke();
+            spawnBehaviour.RemoveAllListeners();
+
+            //gameObject.SetActive(false);
         }
         else
         {
             int newType = (int)bossType;
 
+            spawnBehaviour.Invoke();
             spawnBehaviour.RemoveAllListeners();
 
-            bossType = (Elements)(++newType % 4);
+            newType += 2;
+
+            bossType = (Elements)(newType % 4);
 
             dissolveSpeed /= 1.5f;
             dissolveTime = 0f;
@@ -95,11 +131,13 @@ public class Boss : MonoBehaviour
                     spawnBehaviour.AddListener(LightningStrikes);
                     break;
                 case Elements.Wind:
-                    spawnBehaviour.AddListener(TornadoSpawn)
+                    spawnBehaviour.AddListener(TornadoSpawn);
                     break;
                 default:
                     break;
             }
+
+            spawnBehaviour.Invoke();
         }
     }
 
@@ -130,6 +168,14 @@ public class Boss : MonoBehaviour
         rend.material.SetFloat("DissolveState", dissolveTime);
 
         healthBar.transform.localScale = new Vector3(Mathf.Lerp(0f, startScaleBar, (float)health / maxHealth), healthBar.transform.localScale.y, 0f);
+
+        if (!XInput.GetConnected())
+        {
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                ManualReset();
+            }
+        }
     }
 
     void BeginDeath()
@@ -228,8 +274,67 @@ public class Boss : MonoBehaviour
         }
     }
 
-    void FlameSpawn()
+    public void FlameSpawn()
     {
+        if (!flameSpawn)
+        {
+            //spawn behaviour
+            flameSpawn = true;
+        }
+        else
+        {
+            //despawn behaviour
+        }
+    }
 
+    public void WaterRise()
+    {
+        if (!waterSpawn)
+        {
+            //spawn behaviour
+            waterSpawn = true;
+            WaterHazardObj.SetActive(true);
+        }
+        else
+        {
+            //despawn behaviour
+            waterSpawn = false;
+            WaterHazardObj.GetComponent<WaterHazard>().EndHazard();
+        }
+    }
+
+    public void LightningStrikes()
+    {
+        if (!lightningSpawn)
+        {
+            //spawn behaviour
+            lightningSpawn = true;
+        }
+        else
+        {
+            //despawn behaviour
+        }
+    }
+
+    public void TornadoSpawn()
+    {
+        if (!windSpawn)
+        {
+            //spawn behaviour
+            windSpawn = true;
+            WindHazardObj.SetActive(true);
+        }
+        else
+        {
+            //despawn behaviour
+            windSpawn = false;
+            WindHazardObj.GetComponent<WindControl>().KillTornado();
+        }
+    }
+
+    public void ManualReset()
+    {
+        killCount = -1;
+        re_enable();
     }
 }

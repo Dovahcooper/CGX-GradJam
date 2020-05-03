@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider), typeof(Rigidbody))]
-public class Bullets : MonoBehaviour
+public class BossBullet : MonoBehaviour
 {
     Vector3 velocity;
     public float speed = 20f;
@@ -39,7 +38,7 @@ public class Bullets : MonoBehaviour
     {
         eTime += Time.fixedDeltaTime;
 
-        if(eTime > 5f)
+        if (eTime > 5f)
         {
             gameObject.SetActive(false);
         }
@@ -47,14 +46,14 @@ public class Bullets : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Boss tryBoss;
+        Elemental tryPlayer;
 
-        if (other.TryGetComponent<Boss>(out tryBoss))
+        if (other.TryGetComponent <Elemental>(out tryPlayer))
         {
-            tryBoss.Damage(type);
+            tryPlayer.Damage();
         }
 
-        if(other.tag != "Player")
+        if (other.tag != "Boss" && !other.isTrigger)
             gameObject.SetActive(false);
     }
 }

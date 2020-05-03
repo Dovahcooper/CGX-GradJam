@@ -32,11 +32,14 @@ public class Jump : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if(!XInput.GetConnected(0))
+        if (!PauseMenu.paused)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (!XInput.GetConnected(0))
             {
-                addJump();
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    addJump();
+                }
             }
         }
     }
@@ -57,8 +60,11 @@ public class Jump : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        doubleJump = false;
-        jumping = false;
+        if (!other.isTrigger)
+        {
+            doubleJump = false;
+            jumping = false;
+        }
     }
 
     private void OnTriggerExit(Collider other)

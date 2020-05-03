@@ -27,18 +27,21 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (XInput.GetConnected(0))
+        if (!PauseMenu.paused)
         {
-            leftStick = XInput.GetLeftStick(0);
+            if (XInput.GetConnected(0))
+            {
+                leftStick = XInput.GetLeftStick(0);
 
-            Move(leftStick.xAxis, leftStick.yAxis);
-        }
-        else
-        {
-            float moveX = Input.GetAxis("Horizontal");
-            float moveY = Input.GetAxis("Vertical");
+                Move(leftStick.xAxis, leftStick.yAxis);
+            }
+            else
+            {
+                float moveX = Input.GetAxis("Horizontal");
+                float moveY = Input.GetAxis("Vertical");
 
-            Move(moveX, moveY);
+                Move(moveX, moveY);
+            }
         }
     }
 
