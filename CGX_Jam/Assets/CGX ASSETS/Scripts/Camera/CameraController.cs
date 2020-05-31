@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (!PauseMenu.paused)
+        if (!PauseMenu.paused && Elemental.Alive)
         {
             if (!cameraLockMode)
             {
@@ -42,12 +42,16 @@ public class CameraController : MonoBehaviour
                 SwitchCamMode();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     void InputChecks()
     {
-        mainCam.transform.localPosition = new Vector3(0.0f, 0.0f, -5.0f);
-
         if (XInput.GetConnected(0))
         {
             XInput.DownloadPackets(1);

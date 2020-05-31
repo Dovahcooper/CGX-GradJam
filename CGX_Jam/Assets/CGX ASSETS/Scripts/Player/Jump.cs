@@ -32,29 +32,29 @@ public class Jump : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (!PauseMenu.paused)
+        if (!XInput.GetConnected(0))
         {
-            if (!XInput.GetConnected(0))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    addJump();
-                }
+                addJump();
             }
         }
     }
 
     public void addJump()
     {
-        if (!jumping)
+        if (!PauseMenu.paused && Elemental.Alive)
         {
-            jumping = true;
-            rb.AddForce(firstJumpVel * Vector3.up, ForceMode.Impulse);
-        }
-        else if (jumping && !doubleJump)
-        {
-            doubleJump = true;
-            rb.AddForce(secondJumpVel * Vector3.up, ForceMode.Impulse);
+            if (!jumping)
+            {
+                jumping = true;
+                rb.AddForce(firstJumpVel * Vector3.up, ForceMode.Impulse);
+            }
+            else if (jumping && !doubleJump)
+            {
+                doubleJump = true;
+                rb.AddForce(secondJumpVel * Vector3.up, ForceMode.Impulse);
+            }
         }
     }
 

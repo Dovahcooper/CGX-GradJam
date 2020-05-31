@@ -13,6 +13,8 @@ public class Boss : MonoBehaviour
 
     public Elements bossType;
 
+    public Transform playerT;
+
     public int maxHealth = 750;
     int health;
 
@@ -32,6 +34,8 @@ public class Boss : MonoBehaviour
 
     public Text id;
     public RawImage healthBar;
+
+    public GameObject endScreen;
     
     [Range(-10f, 10f)]
     public float intensity = 4f;
@@ -89,6 +93,9 @@ public class Boss : MonoBehaviour
         {
             spawnBehaviour.Invoke();
             spawnBehaviour.RemoveAllListeners();
+
+            endScreen.GetComponent<EndScreenText>().winner = true;
+            endScreen.SetActive(true);
 
             //gameObject.SetActive(false);
         }
@@ -176,6 +183,11 @@ public class Boss : MonoBehaviour
                 ManualReset();
             }
         }
+
+        Vector3 tempForward = transform.position - playerT.position;
+        tempForward.y = 0f;
+
+        transform.forward = tempForward;
     }
 
     void BeginDeath()
@@ -335,6 +347,7 @@ public class Boss : MonoBehaviour
     public void ManualReset()
     {
         killCount = -1;
+        bossType = Elements.Wind;
         re_enable();
     }
 }

@@ -27,7 +27,7 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (!PauseMenu.paused)
+        if (!PauseMenu.paused && Elemental.Alive)
         {
             if (XInput.GetConnected(0))
             {

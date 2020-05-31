@@ -30,7 +30,7 @@ public class UISelection : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (XInput.GetConnected()){
             img.texture = XboxTex;

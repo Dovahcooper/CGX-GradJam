@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using XBOX;
 
@@ -22,12 +23,17 @@ public class Elemental : MonoBehaviour
     public Elements curElement = Elements.Water;
     uint elementSelect = 1;
 
-    MeshRenderer renderer;
-
     public int maxHealth;
     int health;
 
+    [Range(0f, 10f)]
+    public float intensity = 3f;
+    float colourMod;
+
     public GameObject healthBar;
+    public GameObject EndScreen;
+
+    public static bool Alive;
 
     public static Color[] colours =
     { // colour   R               G         B  values
@@ -38,10 +44,16 @@ public class Elemental : MonoBehaviour
     };
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        renderer = GetComponent<MeshRenderer>();
+        Alive = true;
         health = maxHealth;
+        colourMod = Mathf.Pow(2f, intensity);
+    }
+
+    private void OnValidate()
+    {
+        colourMod = Mathf.Pow(2, intensity);
     }
 
     // Update is called once per frame
@@ -67,11 +79,18 @@ public class Elemental : MonoBehaviour
             }
         }
 
+        if(health <= 0)
+        {
+            Alive = false;
+            EndScreen.GetComponent<EndScreenText>().winner = false;
+            EndScreen.SetActive(true);
+        }
+
         uint temp = elementSelect % 4;
 
         curElement = (Elements) temp;
 
-        renderer.material.color = colours[temp];
+        GetComponent<MeshRenderer>().material.SetColor("PlayerColor", colours[temp] * colourMod);
 
         healthBar.transform.localScale = new Vector3(Mathf.Lerp(0f, 2f, (float)health / maxHealth), 0.17011f, 0f);
     }
@@ -79,20 +98,24 @@ public class Elemental : MonoBehaviour
     public void resetPlayer()
     {
         health = maxHealth;
+        Alive = true;
     }
 
     public void Damage()
     {
-        health -= 1;
+        if (Alive)
+            health -= 1;
     }
 
     public void ElementInc()
     {
-        elementSelect += 1u;
+        if(Alive)
+            elementSelect += 1u;
     }
 
     public void ElementDec()
     {
-        elementSelect -= 1u;
+        if(Alive)
+            elementSelect -= 1u;
     }
 }

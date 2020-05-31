@@ -49,7 +49,7 @@ namespace XBOX
     public class XInput : MonoBehaviour
     {
         #region IMPORT_METHODS
-        const string dllName = "XInput1_4Wrapper";
+        const string dllName = "XInput1_4 Wrapper";
 
         [DllImport(dllName)]
         public static extern void initDLL();
@@ -69,8 +69,6 @@ namespace XBOX
         [DllImport(dllName)]
         public static extern bool GetKeyReleased(int _index, int _button);
 
-        //bool LIB_API GetKeyHeld(int _index, int _button);
-
         [DllImport(dllName)]
         public static extern Stick GetLeftStick(int _index = 0);
 
@@ -89,7 +87,8 @@ namespace XBOX
 
         public void QuitGame()
         {
-            Application.Quit();
+            if(PauseMenu.paused || endScreen.activeInHierarchy)
+                Application.Quit();
         }
 
         public Buttons[] allButtons =
@@ -148,8 +147,10 @@ namespace XBOX
         public UnityEvent R3Press;
         #endregion
 
+        public GameObject endScreen;
+
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             initDLL();
             DownloadPackets(1);
@@ -159,7 +160,6 @@ namespace XBOX
         void Update()
         {
             DownloadPackets(1);
-            UpdateController(0);
 
             //for(int i = 0; i < allButtons.Length; i++)
             //{
@@ -170,6 +170,8 @@ namespace XBOX
             //}
             if (GetConnected(0))
             {
+                UpdateController(0);
+
                 if (GetKeyPressed(0, (int)Buttons.A))
                 {
                     aPress.Invoke();

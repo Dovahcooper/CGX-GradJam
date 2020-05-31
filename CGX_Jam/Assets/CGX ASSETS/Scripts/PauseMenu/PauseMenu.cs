@@ -15,7 +15,9 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        paused = false;
+        paused = true;
+        UIObjects.SetActive(true);
+        controller.aPress.AddListener(Pause);
     }
 
     // Update is called once per frame
@@ -30,9 +32,14 @@ public class PauseMenu : MonoBehaviour
             Time.timeScale = 1f;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && Elemental.Alive)
         {
             Pause();
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Application.Quit();
         }
     }
 

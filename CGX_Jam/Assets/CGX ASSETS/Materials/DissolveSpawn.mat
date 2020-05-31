@@ -20,6 +20,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - BossTex:
+        m_Texture: {fileID: 2800000, guid: 66f8a924820c88641bc1c66899ef415d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_F8652B72:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
